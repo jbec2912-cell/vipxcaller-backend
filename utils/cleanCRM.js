@@ -40,70 +40,65 @@ function extractLastPhone(phoneRaw) {
 export function cleanCRMFileOnDisk(inputPath, outputPath) {
   const raw = fs.readFileSync(inputPath, "latin1");
 
-  // Parse everything
-  const allRows = parse(raw, {
-    skip_empty_lines: true,
-  });
+  let allRows;
+  try {
+    allRows = parse(raw, { skip_empty_lines: true });
+  } catch (err) {
+    console.error("CSV Parse Error:", err);
+    throw new Error("Unable to parse CSV file.");
+  }
 
-  // 1) Delete rows 1–4 (0,1,2,3)
+  if (!allRows || allRows.length < 5) {
+    throw new Error("CSV file is missing required rows.");
+  }
+
+  // Delete rows 1–4 (0,1,2,3)
   const rows = allRows.slice(4);
 
-  // 2) First row after that is our header
-  const header = rows[0];
-  const dataRows = rows.slice(1);
+  // First row after slice is the header
+  let header = rows[0];
 
+  // Remove empty or invalid header columns
+  header = header.filter((h) => h && h.trim() && h !== "Unnamed: 13");
+
+  // All remaining rows
+  const dataRows = rows.slice(1);
   const cleanedObjs = [];
 
   for (const row of dataRows) {
     const obj = {};
+
     header.forEach((colName, i) => {
       obj[colName] = row[i] || "";
     });
 
-    // --- STEP: delete any purchase date not at least 12 months old ---
-    if (!isPurchase12MonthsOrOlder(obj["Purchase Date"])) {
-      continue;
-    }
+    // Remove purchase dates newer than 12 months
+    if (!isPurchase12MonthsOrOlder(obj["Purchase Date"])) continue;
 
-    // --- STEP: delete vehicle year 2025 or newer (Column B = Vehicle) ---
+    // Remove vehicles 2025 or newer
     const vehicle = obj["Vehicle"] || "";
-    const yearMatch = vehicle.match(/^\s*(\d{4})\b/);
-    if (yearMatch) {
-      const year = parseInt(yearMatch[1], 10);
-      if (year >= 2025) {
-        continue;
-      }
-    }
+    const yearMatch = vehicle.match(/^\s*(\d{4})/);
+    if (yearMatch && parseInt(yearMatch[1], 10) >= 2025) continue;
 
-    // --- STEP: pull LAST phone number from "Phone Numbers" column ---
+    // Extract last phone number
     const lastPhone = extractLastPhone(obj["Phone Numbers"]);
-    if (!lastPhone) {
-      // delete rows that do NOT have a phone number
-      continue;
-    }
+    if (!lastPhone) continue;
     obj["Phone Numbers"] = lastPhone;
 
-    // --- STEP: delete rows that do NOT have a vehicle ---
-    if (!vehicle.trim()) {
-      continue;
-    }
+    // Remove rows without a vehicle
+    if (!vehicle.trim()) continue;
 
-    // --- STEP: fix CUSTOMER name casing ---
-    if (obj["Customer"]) {
-      obj["Customer"] = toProperCase(obj["Customer"]);
-    }
+    // Fix CUSTOMER case
+    if (obj["Customer"]) obj["Customer"] = toProperCase(obj["Customer"]);
 
     cleanedObjs.push(obj);
   }
 
-  // --- STEP: Delete Column M (in your file this is "Unnamed: 13") ---
-  const finalHeader = header.filter((h) => h !== "Unnamed: 13");
-
   const finalRows = cleanedObjs.map((rowObj) =>
-    finalHeader.map((colName) => rowObj[colName] ?? "")
+    header.map((colName) => rowObj[colName] ?? "")
   );
 
-  const outputCsv = stringify([finalHeader, ...finalRows], {
+  const outputCsv = stringify([header, ...finalRows], {
     quoted: true,
   });
 

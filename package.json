@@ -3,6 +3,17 @@
   "name": "vipxcaller-backend",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
-  "dependencies": {}
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parse": "^5.5.3",
+    "csv-stringify": "^6.4.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "googleapis": "^131.0.0",
+    "multer": "^1.4.5-lts.2",
+    "twilio": "^4.21.0"
+  }
 }
