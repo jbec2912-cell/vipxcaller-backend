@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "name": "vipxcaller-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {}
+}
