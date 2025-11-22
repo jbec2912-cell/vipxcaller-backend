@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VIPXCaller Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 16px;
+      background: #f4f4f4;
+    }
+    .card {
+      background: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    #manualCallBtn {
+      background: #007bff;
+      color: #fff;
+      margin-right: 8px;
+    }
+    #autoCallBtn {
+      background: #28a745;
+      color: #fff;
+    }
+    #status {
+      margin-top: 16px;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>VIPXCaller</h1>
+    <p>1) Test with a manual call. 2) Then let AI auto-call your contacts.</p>
+
+    <label for="phoneInput">Manual Call – Customer Phone Number</label>
+    <input id="phoneInput" type="text" placeholder="+1XXXXXXXXXX" />
+
+    <div>
+      <button id="manualCallBtn">Manual Call</button>
+      <button id="autoCallBtn">Call Now (AI Auto-Call)</button>
+    </div>
+
+    <div id="status"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
