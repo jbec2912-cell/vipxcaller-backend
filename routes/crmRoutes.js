@@ -1,9 +1,20 @@
-import { Router } from "express";
-import { handleCRMUpload } from "../controllers/crmController.js";
-import { upload } from "../middlewares/uploadMiddleware.js";
+// routes/crmRoutes.js
+const express = require('express');
+const router = express.Router();
 
-const router = Router();
+const upload = require('../middlewares/uploadMiddleware');
+const crmController = require('../controllers/crmController');
 
-router.post("/upload", upload.single("file"), handleCRMUpload);
+// Health check
+router.get('/health', crmController.healthCheck);
 
-export default router;
+// Upload + clean + push CRM to Google Sheets
+router.post('/upload-crm', upload.single('file'), crmController.uploadCRM);
+
+// Get contacts from Google Sheets
+router.get('/contacts', crmController.listContacts);
+
+// Start a Twilio call to a specific phone number
+router.post('/call', crmController.makeCall);
+
+module.exports = router;

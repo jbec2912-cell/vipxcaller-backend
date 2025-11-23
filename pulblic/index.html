@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>VIPXCaller Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>VIPXCaller Caller Dashboard</h1>
+      <p>Upload CRM, view contacts, and start calls.</p>
+    </header>
+
+    <main>
+      <!-- Upload Section -->
+      <section class="card">
+        <h2>Upload CRM CSV</h2>
+        <form id="uploadForm">
+          <input type="file" id="crmFile" name="file" accept=".csv" required />
+          <button type="submit">Upload & Process</button>
+        </form>
+        <div id="uploadStatus" class="status"></div>
+      </section>
+
+      <!-- Manual Call Test -->
+      <section class="card">
+        <h2>Manual Call Test</h2>
+        <label for="manualPhone">Phone Number (+1XXXXXXXXXX)</label>
+        <input id="manualPhone" type="text" placeholder="+1XXXXXXXXXX" />
+        <button id="manualCallBtn">Call This Number</button>
+        <div id="manualCallStatus" class="status"></div>
+      </section>
+
+      <!-- Contacts Table -->
+      <section class="card">
+        <h2>Contacts From Google Sheet</h2>
+        <button id="refreshContactsBtn">Refresh Contacts</button>
+        <table id="contactsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Phone</th>
+              <th>Call</th>
+            </tr>
+          </thead>
+          <tbody id="contactsBody"></tbody>
+        </table>
+        <div id="contactsStatus" class="status"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
